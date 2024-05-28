@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone repository') {
             steps {
-                git 'https://github.com/Carlos2002234/CI-CD-PY.git'
+                git 'https://github.com/Carlos2002234/proyectoCICD.git'
             }
         }
         stage('Build Docker image') {
@@ -18,7 +18,8 @@ pipeline {
             steps {
                 script {
                     docker.image('flask-app').inside {
-                        sh 'pytest tests/' // Run tests using pytest from the 'tests' directory
+                        // Add the parent directory of proyectoCICD to the Python path
+                        sh 'export PYTHONPATH=$PWD/../ && pytest tests/'
                     }
                 }
             }
