@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        git 'https://github.com/Carlos2002234/CI-CD-PY.git'
+                        git 'https://github.com/Carlos2002234/CI-CD-cleaPY.git'
                         
                     } catch (err) {
                         currentBuild.result = 'FAILURE'
@@ -32,7 +32,7 @@ pipeline {
                 script {
                     try {
                         docker.image('flask-app').inside {
-                            sh 'export PYTHONPATH=$PWD/../ && pytest tests/'
+                            sh 'export PYTHONPATH=$PWD && pytest tests/'
                         }
                     } catch (err) {
                         currentBuild.result = 'FAILURE'
