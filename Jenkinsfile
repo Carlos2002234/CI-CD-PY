@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        docker.run('flask-app', '-p 5000:5000')
+                        docker.image('flask-app').run("-p 5000:5000")
                     } catch (err) {
                         currentBuild.result = 'FAILURE'
                         error "Failed to deploy: ${err}"
