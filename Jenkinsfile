@@ -6,7 +6,8 @@ pipeline {
             steps {
                 script {
                     try {
-                        git 'https://github.com/Carlos2002234/proyectoCICD.git'
+                        git 'https://github.com/Carlos2002234/CI-CD-PY.git'
+                        
                     } catch (err) {
                         currentBuild.result = 'FAILURE'
                         error "Failed to clone repository: ${err}"
