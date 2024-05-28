@@ -1,14 +1,16 @@
 FROM python:3.9-alpine
 
-WORKDIR /flask_app
+WORKDIR /proyectoCICD
 
 COPY requirements.txt .
 
+# Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Install pytest
 RUN pip install pytest
 
-COPY app/ .
-COPY tests/ ./tests/
+# Copy the application code
+COPY . .
 
 CMD [ "python", "app.py" ]
