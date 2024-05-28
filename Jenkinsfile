@@ -6,7 +6,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        git 'https://github.com/Carlos2002234/CI-CD-cleaPY.git'
+                        git 'https://github.com/Carlos2002234/CI-CD-PY/tree/master'
                         
                     } catch (err) {
                         currentBuild.result = 'FAILURE'
