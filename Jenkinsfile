@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Clone repository') {
             steps {
-                git 'https://github.com/user/flask-ci-cd-example.git'
+                git 'https://github.com/Carlos2002234/CI-CD-PY.git'
             }
         }
         stage('Build Docker image') {
