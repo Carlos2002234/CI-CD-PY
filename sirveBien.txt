@@ -18,7 +18,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        docker.build('flask-app')
+                        docker.build('carlos644/flask-app')
                     } catch (err) {
                         currentBuild.result = 'FAILURE'
                         error "Failed to build Docker image: ${err}"
@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        docker.image('flask-app').inside {
+                        docker.image('carlos644/flask-app').inside {
                             sh 'export PYTHONPATH=$PWD && pytest tests/'
                         }
                     } catch (err) {
@@ -40,11 +40,39 @@ pipeline {
                 }
             }
         }
+        stage('Publish Docker image') {
+            steps {
+                script {
+                    try {
+                        withCredentials([usernamePassword(credentialsId: 'dockerHubCredentials', usernameVariable: 'DOCKER_HUB_USER', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+                            sh 'echo $DOCKER_HUB_PASSWORD | docker login -u $DOCKER_HUB_USER --password-stdin'
+                            sh 'docker push carlos644/flask-app:latest'
+                        }
+                    } catch (err) {
+                        currentBuild.result = 'FAILURE'
+                        error "Failed to publish Docker image: ${err}"
+                    }
+                }
+            }
+        }
         stage('Deploy') {
             steps {
                 script {
                     try {
-                        docker.image('flask-app').run("-p 5000:5000")
+                        // SSH credentials ID from Jenkins credentials store
+                        def sshCredentialsId = 'ec2-user'
+
+                        // SSH into the server and run deployment commands
+                        sshagent([sshCredentialsId]) {
+                            sh '''
+                                ssh -o StrictHostKeyChecking=no ec2-user@18.212.202.207 <<'EOF'
+                                docker pull carlos644/flask-app:latest
+                                docker stop flask-app || true
+                                docker rm flask-app || true
+                                docker run -d -p 5000:5000 --name flask-app carlos644/flask-app:latest
+EOF
+                            '''
+                        }
                     } catch (err) {
                         currentBuild.result = 'FAILURE'
                         error "Failed to deploy: ${err}"
