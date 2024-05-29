@@ -45,7 +45,7 @@ pipeline {
                 script {
                     try {
                         // SSH credentials ID from Jenkins credentials store
-                        def sshCredentialsId = 'your-ssh-credentials-id'
+                        def sshCredentialsId = 'ec2-user'
 
                         // SSH into the server and run deployment commands
                         sshagent([sshCredentialsId]) {
